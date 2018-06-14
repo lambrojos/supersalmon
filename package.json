@@ -1,0 +1,25 @@
+{
+  "name": "supersalmon",
+  "version": "1.0.0",
+  "description": "Stream processor for xlsx files",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha test"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
+  },
+  "dependencies": {
+    "pump": "^3.0.0",
+    "stream-file-type": "^0.1.1",
+    "through": "^2.3.8",
+    "xlsx-stream-reader": "^0.9.11"
+  }
+}
