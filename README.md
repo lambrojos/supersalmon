@@ -1,4 +1,4 @@
-# XLSX stream processor
+# Supersalmon
 
 ## Features
 * Process xlsx files while streaming
@@ -42,14 +42,14 @@
 Or see tests
 
 ## TODO List
-[] Write some real documentation
-[] Refactor
-[] Add linter
-[] Add more tests
-[] Support files without column names in the first row
-[] Parallel record processing
-[] Port to typescript
-[] Better API
-[] Parse all sheets in a workbook
+- [] Write some real documentation
+- [] Refactor
+- [] Add linter
+- [] Add more tests
+- [] Support files without column names in the first row
+- [] Parallel record processing
+- [] Port to typescript
+- [] Better API
+- [] Parse all sheets in a workbook
 
 Issues and PRs more than welcome!
