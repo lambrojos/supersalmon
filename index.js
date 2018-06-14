@@ -1,11 +1,7 @@
-
-/* const Excel = require('exceljs');
-const Promise = require('bluebird'); */
 const pump = require('pump');
 const XlsxStreamReader = require('xlsx-stream-reader');
 const { Writable } = require('stream');
 const through = require('through');
-/* const Promise = require('bluebird'); */
 const FileType = require('stream-file-type');
 
 const isEmpty = val => val === undefined || val === null || val === '';
@@ -32,14 +28,12 @@ module.exports = (inputStream, processor, mapColumns, onLineCount) =>
     }
 
     const workBookReader = new XlsxStreamReader();
-    workBookReader.on('error', err => reject(err));
+    workBookReader.on('error', reject);
 
     workBookReader.on('worksheet', (workSheetReader) => {
       detected = true;
 
-      workSheetReader.workSheetStream.on('error', (err) => {
-        reject(err);
-      });
+      workSheetReader.workSheetStream.on('error', reject);
 
       function toStream(ev) {
         const s = through(write);
@@ -116,15 +110,3 @@ module.exports = (inputStream, processor, mapColumns, onLineCount) =>
       if (err) { reject(err); }
     });
   });
-
-
-/*
-  // In case streaming does not work
-  const workbook = new Excel.Workbook();
-  const stream = workbook.xlsx.createInputStream();
-  stream.on('done', () => {
-    // console.log('OK', workbook);
-    const used = process.memoryUsage().heapUsed / 1024 / 1024;
-    console.log(`The script uses approximately ${used} MB`);
-  });
-  pump(inputStream, stream); */
