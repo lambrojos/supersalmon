@@ -9,6 +9,7 @@
 * Will reject on non xlsx data
 * Battle tested in production code
 * Skips empty rows (maybe it's a caveat)
+* Limit parsing: process a file to a specified row, then stop
 
 ## Caveats
 * Only parses the first on sheet in a workbook
@@ -22,21 +23,27 @@
 
   // The promise is resolved when the stream is completely processed
   // It resolves to the count of processed rows
+  const processed = await supersalmon({
 
-  const processed = await supersalmon(
+    // (required) Any readable stream will work - remember that only the first sheet will be parsed
+    inputStream: createReadStream('huge.xlsx'),
 
-    // Any readable stream will work - remember that only the first sheet will be parsed
-    createReadStream('huge.xlsx'),
+    // (required) process records one at a time - the argument object's keys are determined by col names
+    // the row index is provided as the second parameter
+    processor: ({name, surname}, i) => {
+      doSomethingWithRowIndex(i)
+      repository.insert({ name, surname })
+    },
 
-    // process records one at a time - the argument object's keys are determined by col names
-    ({name, surname}) => repository.insert({ name, surname }),
+    // (required) transform column names- column names will become the key names of the processed objects
+    mapColumns: cols => colName => colName.toLowerCase().trim(),
 
-    // transform column names- column names will become the key names of the processed objects
-    cols => colName => colName.toLowerCase().trim(),
+    // (optional) the last function is called when the line count metadata is encountered in the stream
+    onLineCount: lineCount => notifyLineCount(lineCount),
 
-    // the last function is called when the line count metadata is encountered in the stream
-    lineCount => notifyLineCount(lineCount),
-  );
+    // (optional) parse until the 10th line then destroy streams and return
+    limit: 10
+  });
 ```
 
 Or see tests
@@ -49,7 +56,7 @@ Or see tests
 - [ ] Support files without column names in the first row
 - [ ] Parallel record processing
 - [ ] Port to typescript
-- [ ] Better API
+- [x] Better API
 - [ ] Parse all sheets in a workbook
 
 Issues and PRs more than welcome!
