@@ -1,29 +1,53 @@
 const { expect } = require('chai');
 const XLSXProcessor = require('..');
 const { join } = require('path')
+const Promise = require('bluebird')
 const { createReadStream } = require('fs')
 
 describe('XSLT Processor', () => {
-  it.only('processes an xslt file.', async () => {
-    const processed = await XLSXProcessor(
-      createReadStream(join(__dirname, 'fixtures', 'error.xlsx')),
-      (data) => {
+  it('processes an xslt file.', async () => {
+    const processed = await XLSXProcessor({
+      inputStream: createReadStream(join(__dirname, 'fixtures', 'error.xlsx')),
+      processor: (data, i) => {
+        expect(i).to.be.a('number')
         expect(data['first name']).to.be.ok;
       },
-      colName => colName.toLowerCase().trim(),
-      () => {},
-    );
+      mapColumns: colName => colName.toLowerCase().trim(),
+    });
     expect(processed).to.equal(19);
   });
 
-  it.only('processes this other xslt file.', async () => {
+  it('parses dates', async () => {
+    const inputStream = createReadStream(join(__dirname, 'fixtures', 'dates.xlsx'));
+    const processed = await XLSXProcessor({
+      inputStream,
+      processor: async (data, i) => {
+        expect(data['Data di nascita'].match(/\d{2}\/\d{2}\/\d{4}/)) 
+      },
+      mapColumns: i => i,
+    });
+  });
+
+  it('allows stream limit interruption', async () => {
+    const inputStream = createReadStream(join(__dirname, 'fixtures', 'test.xlsx'));
+    const processed = await XLSXProcessor({
+      inputStream,
+      processor: async (data, i) => {
+        await Promise.delay(50)
+      },
+      mapColumns: colName => colName.toLowerCase().trim(),
+      limit: 10
+    });
+    expect(processed).to.equal(10)
+  });
+
+  it('processes this other xslt file.', async () => {
     try {
-      await XLSXProcessor(
-        createReadStream(join(__dirname, 'fixtures', 'broken.xlsx')),
-        () => {},
-        colName => colName.toLowerCase().trim(),
-        () => {},
-      );
+      await XLSXProcessor({
+        inputStream: createReadStream(join(__dirname, 'fixtures', 'broken.xlsx')),
+        processor: () => {},
+        mapColumns: colName => colName.toLowerCase().trim(),
+      });
     } catch (e) {
       expect(e.message).to.equal('Unknown column ID');
     }

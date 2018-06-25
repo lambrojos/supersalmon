@@ -13,7 +13,7 @@ const isEmpty = val => val === undefined || val === null || val === '';
  * cause the processing operation to fail.
  * Returns a promise containing the number of processed rows
  */
-module.exports = (inputStream, processor, mapColumns, onLineCount) =>
+module.exports = ({inputStream, processor, mapColumns, onLineCount = ()=>{}, limit = Infinity}) =>
   new Promise((resolve, reject) => {
     let i = 0;
     let cols = null;
@@ -38,7 +38,7 @@ module.exports = (inputStream, processor, mapColumns, onLineCount) =>
       function toStream(ev) {
         const s = through(write);
         s.on('drain', () => workSheetReader.workSheetStream.resume());
-        ev.on('row', function onRow(row) {
+        ev.on('row', function onRow(row, i) {
           try {
             if (!cols) {
               if (workSheetReader.sheetData.dimension) {
@@ -54,27 +54,37 @@ module.exports = (inputStream, processor, mapColumns, onLineCount) =>
             reject(err);
             ev.removeListener('row', onRow);
           }
+
         });
         return s;
       }
 
       // read only the first worksheet for now
       if (workSheetReader.id > 1) { workSheetReader.skip(); return; }
+
+      const readStream = toStream(workSheetReader);
       const processRow = new Writable({
         objectMode: true,
         async write(row, encoding, cb) {
         // if this fails, pump will cleanup the broken streams.
           try {
             await processor(row, i);
+            i += 1;
+            if(i === limit) {
+              readStream.destroy()
+              inputStream.destroy()
+              this.destroy()
+              // a premature close error will be raised.. this could actually be good as pump
+              // will unpipe and cleanup
+              return resolve(i)
+            }
           } catch (err) {
             return cb(err);
           }
-          i += 1;
           return cb(null);
         },
       });
       // worksheet reader is an event emitter - we have to convert it to a read stream
-      const readStream = toStream(workSheetReader);
       // signal stream end when the event emitter is finished
       workSheetReader.on('end', () => { readStream.push(null); });
       // chunk and process rows
