@@ -42,7 +42,10 @@
     onLineCount: lineCount => notifyLineCount(lineCount),
 
     // (optional) parse until the 10th line then destroy streams and return
-    limit: 10
+    limit: 10,
+
+    // enable or disable the underlying xlsx-stream-reader formatting feature
+    formatting: false
   });
 ```
 

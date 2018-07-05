@@ -13,7 +13,7 @@ const isEmpty = val => val === undefined || val === null || val === '';
  * cause the processing operation to fail.
  * Returns a promise containing the number of processed rows
  */
-module.exports = ({inputStream, processor, mapColumns, onLineCount = ()=>{}, limit = Infinity}) =>
+module.exports = ({inputStream, processor, mapColumns, onLineCount = ()=>{}, limit = Infinity, formatting = true}) =>
   new Promise((resolve, reject) => {
     let i = 0;
     let cols = null;
@@ -27,7 +27,7 @@ module.exports = ({inputStream, processor, mapColumns, onLineCount = ()=>{}, lim
       return this.queue(rowObject);
     }
 
-    const workBookReader = new XlsxStreamReader();
+    const workBookReader = new XlsxStreamReader({ formatting });
     workBookReader.on('error', reject);
 
     workBookReader.on('worksheet', (workSheetReader) => {
