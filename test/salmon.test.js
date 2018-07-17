@@ -25,8 +25,7 @@ describe('XSLT Processor', () => {
         expect(data['Data di nascita'].match(/\d{2}\/\d{2}\/\d{4}/))
         expect(data['cap'].match(/\d{5}/))
       },
-      mapColumns: i => i,
-      formatting: true
+      mapColumns: i => i
     });
   });
 
