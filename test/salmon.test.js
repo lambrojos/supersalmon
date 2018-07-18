@@ -22,8 +22,20 @@ describe('XSLT Processor', () => {
     const processed = await XLSXProcessor({
       inputStream,
       processor: async (data, i) => {
-        expect(data['Data di nascita'].match(/\d{2}\/\d{2}\/\d{4}/))
-        expect(data['cap'].match(/\d{5}/))
+        expect(data['Data di nascita']).to.match(/\d{2}\/\d{2}\/\d{4}/)
+        expect(data['cap']).to.match(/\d{5}/)
+      },
+      mapColumns: i => i
+    });
+  });
+
+  it('can be used with predefined formats', async () => {
+    const inputStream = createReadStream(join(__dirname, 'fixtures', 'predefined_formats.xlsx'));
+    const processed = await XLSXProcessor({
+      inputStream,
+      processor: async (data, i) => {
+        expect(data['Data di nascita']).to.match(/\d\/\d{1,2}\/\d{2}/)
+        expect(data['cap']).to.match(/\d{5}/)
       },
       mapColumns: i => i
     });
