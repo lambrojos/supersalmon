@@ -10,11 +10,25 @@ describe('XSLT Processor', () => {
       inputStream: createReadStream(join(__dirname, 'fixtures', 'error.xlsx')),
       processor: async (data, i) => {
         expect(i).to.be.a('number')
+        // console.log('DAAAAATAA', data)
         expect(data['first name']).to.be.ok;
       },
       mapColumns: colName => colName.toLowerCase().trim(),
     });
     expect(processed).to.equal(19);
+  });
+
+  it('allows chunked processing', async () => {
+    const processed = await XLSXProcessor({
+      chunkSize: 2,
+      inputStream: createReadStream(join(__dirname, 'fixtures', 'prova.xlsx')),
+      processor: async (data, i) => {
+         expect(data).to.have.lengthOf(2)
+         expect(i%2).to.equal(0)
+      },
+      mapColumns: colName => colName.toLowerCase().trim(),
+    });
+    expect(processed).to.equal(6)
   });
 
   it('formats by default', async () => {
@@ -58,12 +72,19 @@ describe('XSLT Processor', () => {
     const processed = await XLSXProcessor({
       inputStream,
       processor: async (data, i) => {
-        await Promise.delay(50)
       },
       mapColumns: colName => colName.toLowerCase().trim(),
       limit: 10
     });
     expect(processed).to.equal(10)
+  });
+
+  it('processes largeish files', async () => {
+      await XLSXProcessor({
+        inputStream: createReadStream(join(__dirname, 'fixtures', 'big.xlsx')),
+        processor: async () => {},
+        mapColumns: colName => colName.toLowerCase().trim(),
+      });
   });
 
   it('processes this other xslt file.', async () => {
