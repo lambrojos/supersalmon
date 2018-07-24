@@ -28,6 +28,6 @@
     "pump": "^3.0.0",
     "stream-file-type": "^0.1.1",
     "through": "^2.3.8",
-    "xlsx-stream-reader": "github:lambrojos/xlsx-stream-reader#predefined-formats-support"
+    "xlsx-stream-reader": "^1.0.3"
   }
 }

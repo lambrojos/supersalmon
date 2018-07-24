@@ -1761,8 +1761,9 @@
       }
     },
     "xlsx-stream-reader": {
-      "version": "github:lambrojos/xlsx-stream-reader#95a9c5be4728062b282d77877fb39b2ccd292288",
-      "from": "github:lambrojos/xlsx-stream-reader#predefined-formats-support",
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/xlsx-stream-reader/-/xlsx-stream-reader-1.0.3.tgz",
+      "integrity": "sha512-Yv364HkxCV7tzEuLpaAtSI4Sge57Ej0p6z1a326ottKJ7IsqR5L4M+Aje7y23MmMV93mLYqdv/pIU8LOC34gJQ==",
       "requires": {
         "sax": "^1.2.4",
         "ssf": "^0.10.2",
