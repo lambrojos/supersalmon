@@ -8,7 +8,7 @@ describe('XSLT Processor', () => {
   it('processes an xslt file.', async () => {
     const processed = await XLSXProcessor({
       inputStream: createReadStream(join(__dirname, 'fixtures', 'error.xlsx')),
-      processor: (data, i) => {
+      processor: async (data, i) => {
         expect(i).to.be.a('number')
         expect(data['first name']).to.be.ok;
       },
@@ -70,7 +70,7 @@ describe('XSLT Processor', () => {
     try {
       await XLSXProcessor({
         inputStream: createReadStream(join(__dirname, 'fixtures', 'broken.xlsx')),
-        processor: () => {},
+        processor: async () => {},
         mapColumns: colName => colName.toLowerCase().trim(),
       });
     } catch (e) {
