@@ -1,6 +1,6 @@
 {
   "name": "supersalmon",
-  "version": "0.0.3",
+  "version": "0.2.0",
   "description": "Stream processor for xlsx files",
   "main": "index.js",
   "directories": {
@@ -8,19 +8,27 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha test --timeout 10000"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "bluebird": "^3.5.1",
     "chai": "^4.1.2",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
     "mocha": "^5.2.0"
   },
   "dependencies": {
+    "debug": "^3.1.0",
+    "eslint": "^5.2.0",
+    "object-chunker": "^1.0.1",
     "pump": "^3.0.0",
     "stream-file-type": "^0.1.1",
     "through": "^2.3.8",
-    "xlsx-stream-reader": "github:lambrojos/xlsx-stream-reader#ssf-format"
+    "xlsx-stream-reader": "^1.0.3"
   }
 }

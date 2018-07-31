@@ -10,6 +10,7 @@
 * Battle tested in production code
 * Skips empty rows (maybe it's a caveat)
 * Limit parsing: process a file to a specified row, then stop
+* Allows to process rows in chunks (for multiple inserts)
 
 ## Caveats
 * Only parses the first on sheet in a workbook
@@ -45,7 +46,10 @@
     limit: 10,
 
     // enable or disable the underlying xlsx-stream-reader formatting feature
-    formatting: false
+    formatting: false,
+
+    // Returns rows in arrays of 3 elements
+    chunkSize: 3
   });
 ```
 
@@ -54,7 +58,7 @@ Or see tests
 ## TODO List
 - [ ] Write some real documentation
 - [ ] Refactor
-- [ ] Add linter
+- [*] Add linter
 - [ ] Add more tests
 - [ ] Support files without column names in the first row
 - [ ] Parallel record processing
