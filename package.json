@@ -8,7 +8,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha test --timeout 10000"
+    "test": "mocha test --timeout 100000"
   },
   "author": "",
   "license": "ISC",
@@ -28,7 +28,6 @@
     "object-chunker": "^1.0.1",
     "pump": "^3.0.0",
     "stream-file-type": "^0.1.1",
-    "through": "^2.3.8",
     "xlsx-stream-reader": "^1.0.3"
   }
 }

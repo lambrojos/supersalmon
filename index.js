@@ -1,7 +1,6 @@
 const pump = require('pump')
 const XlsxStreamReader = require('xlsx-stream-reader')
-const { Writable } = require('stream')
-const through = require('through')
+const { Writable, Transform } = require('stream')
 const FileType = require('stream-file-type')
 const objectChunker = require('object-chunker')
 const debug = require('debug')('salmon')
@@ -29,18 +28,20 @@ module.exports = ({
     let cols = null
     let detected = null
 
-    function write (row) {
-      if (row.every(isEmpty)) { return true }
-      const rowObj = {}
-      for (let i = 0; i < cols.length; i++) {
-        rowObj[cols[i]] = row[i]
-      }
-      return this.queue(rowObj)
-    }
-
-    const toStream = (reader) => {
-      const s = through(write)
-      s.on('drain', () => { 
+    const toStream = reader => {
+      const s = new Transform({
+        objectMode: true,
+        transform (chunk, enc, cb) {
+          if (chunk.every(isEmpty)) { return cb() }
+          const rowObj = {}
+          for (let i = 0; i < cols.length; i++) {
+            rowObj[cols[i]] = chunk[i]
+          }
+          this.push(rowObj)
+          cb()
+        }
+      })
+      s.on('drain', () => {
         debug('resume stream')
         reader.workSheetStream.resume()
       })
@@ -74,12 +75,12 @@ module.exports = ({
       const readStream = toStream(workSheetReader)
       const processRow = new Writable({
         objectMode: true,
-        async write(row, encoding, cb) {
+        async write (row, encoding, cb) {
         // if this fails, pump will cleanup the broken streams.
           try {
-            await processor(row, i);
-            i += chunkSize;
-            if(i === limit) {
+            await processor(row, i)
+            i += chunkSize
+            if (i === limit) {
               readStream.destroy()
               inputStream.destroy()
               this.destroy()
@@ -88,10 +89,10 @@ module.exports = ({
               return resolve(i)
             }
           } catch (err) {
-            return cb(err);
+            return cb(err)
           }
-          return cb(null);
-        },
+          return cb(null)
+        }
       })
       // worksheet reader is an event emitter - we have to convert it to a read stream
       // signal stream end when the event emitter is finished
