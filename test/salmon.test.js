@@ -3,6 +3,7 @@ const XLSXProcessor = require('..')
 const { join } = require('path')
 const Promise = require('bluebird')
 const { createReadStream } = require('fs')
+const { Writable } = require('stream')
 
 describe('XSLT Processor', () => {
   it('processes an xslt file.', async () => {
@@ -17,6 +18,18 @@ describe('XSLT Processor', () => {
       }
     })
     expect(processed).to.equal(19)
+  })
+
+  it('processes an xslt file without headers.', async () => {
+    const processed = await XLSXProcessor({
+      inputStream: createReadStream(join(__dirname, 'fixtures', 'prova.xlsx'))
+    }).processor({
+      onRow: async (data, i) => {
+        expect(Object.keys(data)).to.deep.equal(Array.from(Array(10).keys()).map(k => k.toString()))
+        console.log(data)
+      }
+    })
+    expect(processed).to.equal(7)
   })
 
   it('allows chunked processing', async () => {
@@ -91,7 +104,6 @@ describe('XSLT Processor', () => {
       mapColumns: colName => colName.toLowerCase().trim()
     }).processor({
       onRow: async () => {
-       await Promise.delay(500)
       }
     })
   })
@@ -109,11 +121,16 @@ describe('XSLT Processor', () => {
     }
   })
 
-  it.only('allows the user to access the row objects stream', () => {
+  it('allows the user to access the row objects stream', () => {
     const stream = XLSXProcessor({
       inputStream: createReadStream(join(__dirname, 'fixtures', 'error.xlsx')),
       mapColumns: colName => colName.toLowerCase().trim()
     }).stream()
-    stream.pipe(console.log)
+    stream.pipe(new Writable({
+      objectMode: true,
+      write (chunk, _enc, cb) {
+        cb()
+      }
+    }))
   })
 })

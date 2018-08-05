@@ -81,7 +81,8 @@ module.exports = ({
           debug('resume stream')
           workSheetReader.workSheetStream.resume()
         })
-        workSheetReader.on('row', function onRow (row, i) {
+        workSheetReader.on('row', (row, i) => {
+          row.values.shift()
           debug('row received')
           try {
             if (!cols) {
@@ -89,7 +90,12 @@ module.exports = ({
                 const lines = workSheetReader.sheetData.dimension[0].attributes.ref.match(/\d+$/)
                 onLineCount(parseInt(lines, 10) - 1)
               }
-              cols = row.values.map(mapColumns)
+              if (mapColumns) {
+                cols = row.values.map(mapColumns)
+              } else {
+                cols = Array.from(row.values.keys())
+                stream.write(row.values)
+              }
             } else if (!stream.write(row.values)) {
               debug('pausing stream')
               workSheetReader.workSheetStream.pause()
@@ -120,7 +126,6 @@ module.exports = ({
               await onRow(row, i)
               i += chunkSize
               if (i === limit) {
-                reader.removeAllListeners('row')
                 readStream.destroy()
                 detector.destroy()
                 inputStream.destroy()

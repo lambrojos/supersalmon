@@ -29,12 +29,6 @@
     // (required) Any readable stream will work - remember that only the first sheet will be parsed
     inputStream: createReadStream('huge.xlsx'),
 
-    // (required) process records one at a time - the argument object's keys are determined by col names
-    // the row index is provided as the second parameter
-    processor: ({name, surname}, i) => {
-      doSomethingWithRowIndex(i)
-      repository.insert({ name, surname })
-    },
 
     // (required) transform column names- column names will become the key names of the processed objects
     mapColumns: cols => colName => colName.toLowerCase().trim(),
@@ -42,15 +36,26 @@
     // (optional) the last function is called when the line count metadata is encountered in the stream
     onLineCount: lineCount => notifyLineCount(lineCount),
 
-    // (optional) parse until the 10th line then destroy streams and return
-    limit: 10,
 
     // enable or disable the underlying xlsx-stream-reader formatting feature
     formatting: false,
 
     // Returns rows in arrays of 3 elements
     chunkSize: 3
+  }).processor({
+    // (optional) parse until the 10th line then destroy streams and return
+    limit: 10,
+    // the row index tis provided as the second parameter
+    processor: ({name, surname}, i) => {
+      doSomethingWithRowIndex(i)
+      repository.insert({ name, surname })
+    },
   });
+
+  // Alternatively it is possibile to access directly the object stream
+
+  const stream = supersalmon({ /* config */ }).stream()
+  stream.pipe(myOtherStream)
 ```
 
 Or see tests
