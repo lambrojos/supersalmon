@@ -108,4 +108,12 @@ describe('XSLT Processor', () => {
       expect(e.message).to.equal('Unknown column ID')
     }
   })
+
+  it.only('allows the user to access the row objects stream', () => {
+    const stream = XLSXProcessor({
+      inputStream: createReadStream(join(__dirname, 'fixtures', 'error.xlsx')),
+      mapColumns: colName => colName.toLowerCase().trim()
+    }).stream()
+    stream.pipe(console.log)
+  })
 })
