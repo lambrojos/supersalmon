@@ -22,11 +22,25 @@ describe('XSLT Processor', () => {
 
   it('processes an xslt file without headers.', async () => {
     const processed = await XLSXProcessor({
+      hasHeaders: false,
       inputStream: createReadStream(join(__dirname, 'fixtures', 'prova.xlsx'))
     }).processor({
       onRow: async (data, i) => {
         expect(Object.keys(data)).to.deep.equal(Array.from(Array(10).keys()).map(k => k.toString()))
         console.log(data)
+      }
+    })
+    expect(processed).to.equal(7)
+  })
+
+  it('processes an xslt file without headers while providing a column mapoer', async () => {
+    const processed = await XLSXProcessor({
+      hasHeaders: false,
+      mapColumns: (_v, i) => i * 2,
+      inputStream: createReadStream(join(__dirname, 'fixtures', 'prova.xlsx'))
+    }).processor({
+      onRow: async (data, i) => {
+        expect(Object.keys(data)).to.deep.equal(Array.from(Array(10).keys()).map(k => (k * 2).toString()))
       }
     })
     expect(processed).to.equal(7)

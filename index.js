@@ -6,6 +6,7 @@ const objectChunker = require('object-chunker')
 const debug = require('debug')('salmon')
 
 const isEmpty = val => val === undefined || val === null || val === ''
+const byIndex = (_val, i) => i
 /**
  * Processes a stream containing an XLSX file.
  * Calls the provided async `processor` function.
@@ -16,11 +17,12 @@ const isEmpty = val => val === undefined || val === null || val === ''
 module.exports = ({
   inputStream,
   processor,
-  mapColumns,
+  mapColumns = byIndex,
   onLineCount = () => {},
   limit = Infinity,
   formatting = true,
-  chunkSize = 1
+  chunkSize = 1,
+  hasHeaders = true
 }) => {
   let cols = null
   let detected = false
@@ -90,12 +92,8 @@ module.exports = ({
                 const lines = workSheetReader.sheetData.dimension[0].attributes.ref.match(/\d+$/)
                 onLineCount(parseInt(lines, 10) - 1)
               }
-              if (mapColumns) {
-                cols = row.values.map(mapColumns)
-              } else {
-                cols = Array.from(row.values.keys())
-                stream.write(row.values)
-              }
+              cols = row.values.map(mapColumns)
+              if (!hasHeaders) { stream.write(row.values) }
             } else if (!stream.write(row.values)) {
               debug('pausing stream')
               workSheetReader.workSheetStream.pause()
