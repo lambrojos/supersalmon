@@ -147,4 +147,17 @@ describe('XSLT Processor', () => {
       }
     }))
   })
+
+  it('reporst an error on a non xlsx-file', async () => {
+    try {
+      await XLSXProcessor({
+        inputStream: createReadStream(join(__dirname, 'fixtures', 'notanxlsx.xlsx')),
+        mapColumns: colName => colName.toLowerCase().trim()
+      }).processor({
+        onRow: async () => {}
+      })
+    } catch (e) {
+      expect(e.message).to.equal('Invalid file type')
+    }
+  })
 })

@@ -34,8 +34,8 @@ module.exports = ({
     debug(err)
     inputStream.destroy()
     detector.destroy()
-    reader.removeAllListeners('row')
-    stream.destroy(err)
+    if (reader) { reader.removeAllListeners('row') }
+    if (stream) { stream.destroy(err) }
   }
 
   return {
