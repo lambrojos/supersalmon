@@ -123,9 +123,9 @@
       "integrity": "sha1-ibTRmasr7kneFk6gK4nORi1xt2c="
     },
     "big-integer": {
-      "version": "1.6.32",
-      "resolved": "https://registry.npmjs.org/big-integer/-/big-integer-1.6.32.tgz",
-      "integrity": "sha512-ljKJdR3wk9thHfLj4DtrNiOSTxvGFaMjWrG4pW75juXC4j7+XuKJVFdg4kgFMYp85PVkO05dFMj2dk2xVsH4xw=="
+      "version": "1.6.36",
+      "resolved": "https://registry.npmjs.org/big-integer/-/big-integer-1.6.36.tgz",
+      "integrity": "sha512-t70bfa7HYEA1D9idDbmuv7YbsbVkQ+Hp+8KFSul4aE5e/i1bjCNIRYJZlA8Q8p0r9T8cF/RVvwUgRA//FydEyg=="
     },
     "binary": {
       "version": "0.3.0",
@@ -1682,7 +1682,7 @@
       "dependencies": {
         "bluebird": {
           "version": "3.4.7",
-          "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-3.4.7.tgz",
+          "resolved": "http://registry.npmjs.org/bluebird/-/bluebird-3.4.7.tgz",
           "integrity": "sha1-9y12C+Cbf3bQjtj66Ysomo0F+rM="
         },
         "process-nextick-args": {
@@ -1692,7 +1692,7 @@
         },
         "readable-stream": {
           "version": "2.1.5",
-          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.1.5.tgz",
+          "resolved": "http://registry.npmjs.org/readable-stream/-/readable-stream-2.1.5.tgz",
           "integrity": "sha1-ZvqLcg4UOLNkaB8q0aY8YYRIydA=",
           "requires": {
             "buffer-shims": "^1.0.0",
@@ -1761,9 +1761,9 @@
       }
     },
     "xlsx-stream-reader": {
-      "version": "1.0.3",
-      "resolved": "https://registry.npmjs.org/xlsx-stream-reader/-/xlsx-stream-reader-1.0.3.tgz",
-      "integrity": "sha512-Yv364HkxCV7tzEuLpaAtSI4Sge57Ej0p6z1a326ottKJ7IsqR5L4M+Aje7y23MmMV93mLYqdv/pIU8LOC34gJQ==",
+      "version": "1.0.7",
+      "resolved": "https://registry.npmjs.org/xlsx-stream-reader/-/xlsx-stream-reader-1.0.7.tgz",
+      "integrity": "sha512-MjAQoOrh6NVh/h6L9D3C/USlXcd1zFMw3fUtAdagyMVJ/X3OGv1wyf1T6CNKjMNClsNo/s5CGtIz0R4WY+fYyA==",
       "requires": {
         "sax": "^1.2.4",
         "ssf": "^0.10.2",
