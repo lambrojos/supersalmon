@@ -1,7 +1,7 @@
+/* eslint-env node, mocha */
 const { expect } = require('chai')
 const XLSXProcessor = require('..')
 const { join } = require('path')
-const Promise = require('bluebird')
 const { createReadStream } = require('fs')
 const { Writable } = require('stream')
 
@@ -13,7 +13,6 @@ describe('XSLT Processor', () => {
     }).processor({
       onRow: async (data, i) => {
         expect(i).to.be.a('number')
-        // console.log('DAAAAATAA', data)
         expect(data['first name']).to.be.ok
       }
     })
@@ -27,7 +26,6 @@ describe('XSLT Processor', () => {
     }).processor({
       onRow: async (data, i) => {
         expect(Object.keys(data)).to.deep.equal(Array.from(Array(10).keys()).map(k => k.toString()))
-        console.log(data)
       }
     })
     expect(processed).to.equal(7)
@@ -75,7 +73,7 @@ describe('XSLT Processor', () => {
 
   it('can be used with predefined formats', async () => {
     const inputStream = createReadStream(join(__dirname, 'fixtures', 'predefined_formats.xlsx'))
-    const processed = await XLSXProcessor({
+    await XLSXProcessor({
       inputStream,
       mapColumns: i => i
     }).processor({
@@ -148,7 +146,21 @@ describe('XSLT Processor', () => {
     }))
   })
 
-  it('reporst an error on a non xlsx-file', async () => {
+  it('reports an error if the first line is empty and headers are required', async () => {
+    try {
+      await XLSXProcessor({
+        hasHeader: true,
+        inputStream: createReadStream(join(__dirname, 'fixtures', 'missingHeaders.xlsx')),
+        mapColumns: colName => colName.toLowerCase().trim()
+      }).processor({
+        onRow: (object) => {}
+      })
+    } catch (e) {
+      expect(e.message).to.equal('Header row is empty')
+    }
+  })
+
+  it('reports an error on a non xlsx-file', async () => {
     try {
       await XLSXProcessor({
         inputStream: createReadStream(join(__dirname, 'fixtures', 'notanxlsx.xlsx')),

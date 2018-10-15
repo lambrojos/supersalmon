@@ -30,6 +30,8 @@
     inputStream: createReadStream('huge.xlsx'),
 
 
+    hasHeaders: true,
+
     // (required) transform column names- column names will become the key names of the processed objects
     mapColumns: cols => colName => colName.toLowerCase().trim(),
 

@@ -87,13 +87,20 @@ module.exports = ({
           row.values.shift()
           debug('row received')
           try {
+            if (row.values.every(isEmpty)) {
+              if (!cols && hasHeaders) { throw new Error('Header row is empty') } else { return }
+            }
             if (!cols) {
               if (workSheetReader.sheetData.dimension) {
                 const lines = workSheetReader.sheetData.dimension[0].attributes.ref.match(/\d+$/)
                 onLineCount(parseInt(lines, 10) - 1)
               }
               cols = row.values.map(mapColumns)
-              if (!hasHeaders) { stream.write(row.values) }
+              if (!hasHeaders) {
+                stream.write(row.values)
+              } else if (row.values.every(isEmpty)) {
+                throw new Error('Empty header row')
+              }
             } else if (!stream.write(row.values)) {
               debug('pausing stream')
               workSheetReader.workSheetStream.pause()
