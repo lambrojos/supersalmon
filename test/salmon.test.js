@@ -146,10 +146,20 @@ describe('XSLT Processor', () => {
     }))
   })
 
+  it('does not report an error if the first line is empty and headers are not required', async () => {
+    await XLSXProcessor({
+      hasHeaders: false,
+      inputStream: createReadStream(join(__dirname, 'fixtures', 'missingHeaders.xlsx')),
+      mapColumns: colName => colName.toLowerCase().trim()
+    }).processor({
+      onRow: (object) => {}
+    })
+  })
+
   it('reports an error if the first line is empty and headers are required', async () => {
     try {
       await XLSXProcessor({
-        hasHeader: true,
+        hasHeaders: true,
         inputStream: createReadStream(join(__dirname, 'fixtures', 'missingHeaders.xlsx')),
         mapColumns: colName => colName.toLowerCase().trim()
       }).processor({
@@ -159,6 +169,7 @@ describe('XSLT Processor', () => {
       expect(e.message).to.equal('Header row is empty')
     }
   })
+
 
   it('reports an error on a non xlsx-file', async () => {
     try {
