@@ -123,9 +123,9 @@
       "integrity": "sha1-ibTRmasr7kneFk6gK4nORi1xt2c="
     },
     "big-integer": {
-      "version": "1.6.36",
-      "resolved": "https://registry.npmjs.org/big-integer/-/big-integer-1.6.36.tgz",
-      "integrity": "sha512-t70bfa7HYEA1D9idDbmuv7YbsbVkQ+Hp+8KFSul4aE5e/i1bjCNIRYJZlA8Q8p0r9T8cF/RVvwUgRA//FydEyg=="
+      "version": "1.6.40",
+      "resolved": "https://registry.npmjs.org/big-integer/-/big-integer-1.6.40.tgz",
+      "integrity": "sha512-CjhtJp0BViLzP1ZkEnoywjgtFQXS2pomKjAJtIISTCnuHILkLcAXLdFLG/nxsHc4s9kJfc+82Xpg8WNyhfACzQ=="
     },
     "binary": {
       "version": "0.3.0",
@@ -1706,7 +1706,7 @@
         },
         "string_decoder": {
           "version": "0.10.31",
-          "resolved": "https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz",
+          "resolved": "http://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz",
           "integrity": "sha1-YuIDvEF2bGwoyfyEMB2rHFMQ+pQ="
         }
       }
@@ -1761,9 +1761,9 @@
       }
     },
     "xlsx-stream-reader": {
-      "version": "1.0.7",
-      "resolved": "https://registry.npmjs.org/xlsx-stream-reader/-/xlsx-stream-reader-1.0.7.tgz",
-      "integrity": "sha512-MjAQoOrh6NVh/h6L9D3C/USlXcd1zFMw3fUtAdagyMVJ/X3OGv1wyf1T6CNKjMNClsNo/s5CGtIz0R4WY+fYyA==",
+      "version": "1.0.9",
+      "resolved": "https://registry.npmjs.org/xlsx-stream-reader/-/xlsx-stream-reader-1.0.9.tgz",
+      "integrity": "sha512-jVlkoV2qbrXlXvEZyA67Zjo5Wr4mZiBSOSEzD5dyOhb5XAUmyoaceKXvlKHgwVjVggGILe32dFWRKoJ+KiACtA==",
       "requires": {
         "sax": "^1.2.4",
         "ssf": "^0.10.2",
