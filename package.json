@@ -28,6 +28,6 @@
     "object-chunker": "^1.0.1",
     "pump": "^3.0.0",
     "stream-file-type": "^0.1.1",
-    "xlsx-stream-reader": "^1.0.9"
+    "xlsx-stream-reader": "github:lambrojos/xlsx-stream-reader#show-formats"
   }
 }

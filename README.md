@@ -29,8 +29,10 @@
     // (required) Any readable stream will work - remember that only the first sheet will be parsed
     inputStream: createReadStream('huge.xlsx'),
 
-
     hasHeaders: true,
+
+    // optional - returns data alongside their formats ( such as 'DD/MM/YYYY' for dates) - see tests
+    hasFormats: false,
 
     // (required) transform column names- column names will become the key names of the processed objects
     mapColumns: cols => colName => colName.toLowerCase().trim(),
@@ -65,9 +67,9 @@ Or see tests
 ## TODO List
 - [ ] Write some real documentation
 - [ ] Refactor
-- [*] Add linter
+- [x] Add linter
 - [ ] Add more tests
-- [ ] Support files without column names in the first row
+- [x] Support files without column names in the first row
 - [ ] Parallel record processing
 - [ ] Port to typescript
 - [x] Better API

@@ -71,6 +71,21 @@ describe('XSLT Processor', () => {
     })
   })
 
+  it('can return formats', async () => {
+    const inputStream = createReadStream(join(__dirname, 'fixtures', 'dates.xlsx'))
+    await XLSXProcessor({
+      inputStream,
+      mapColumns: i => i,
+      returnFormats: true
+    }).processor({
+      onRow: async (data, i) => {
+        expect(data.values['Data di nascita']).to.match(/\d{2}\/\d{2}\/\d{4}/)
+        expect(data.formats['Data di nascita']).to.equal('DD/MM/YYYY')
+        expect(data.values['cap']).to.match(/\d{5}/)
+      }
+    })
+  })
+
   it('can be used with predefined formats', async () => {
     const inputStream = createReadStream(join(__dirname, 'fixtures', 'predefined_formats.xlsx'))
     await XLSXProcessor({
@@ -80,6 +95,21 @@ describe('XSLT Processor', () => {
       onRow: async (data, i) => {
         expect(data['Data di nascita']).to.match(/\d\/\d{1,2}\/\d{2}/)
         expect(data['cap']).to.match(/\d{5}/)
+      }
+    })
+  })
+
+  it('can return predefined formats', async () => {
+    const inputStream = createReadStream(join(__dirname, 'fixtures', 'predefined_formats.xlsx'))
+    await XLSXProcessor({
+      inputStream,
+      mapColumns: i => i,
+      returnFormats: true
+    }).processor({
+      onRow: async (data, i) => {
+        expect(data.values['Data di nascita']).to.match(/\d\/\d{1,2}\/\d{2}/)
+        expect(data.formats['Data di nascita']).to.equal('m/d/yy')
+        expect(data.formats['cap']).to.equal('General')
       }
     })
   })
@@ -169,7 +199,6 @@ describe('XSLT Processor', () => {
       expect(e.message).to.equal('Header row is empty')
     }
   })
-
 
   it('reports an error on a non xlsx-file', async () => {
     try {

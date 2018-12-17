@@ -1620,7 +1620,7 @@
     },
     "temp": {
       "version": "0.8.3",
-      "resolved": "https://registry.npmjs.org/temp/-/temp-0.8.3.tgz",
+      "resolved": "http://registry.npmjs.org/temp/-/temp-0.8.3.tgz",
       "integrity": "sha1-4Ma8TSa5AxJEEOT+2BEDAU38H1k=",
       "requires": {
         "os-tmpdir": "^1.0.0",
@@ -1761,9 +1761,8 @@
       }
     },
     "xlsx-stream-reader": {
-      "version": "1.0.9",
-      "resolved": "https://registry.npmjs.org/xlsx-stream-reader/-/xlsx-stream-reader-1.0.9.tgz",
-      "integrity": "sha512-jVlkoV2qbrXlXvEZyA67Zjo5Wr4mZiBSOSEzD5dyOhb5XAUmyoaceKXvlKHgwVjVggGILe32dFWRKoJ+KiACtA==",
+      "version": "github:lambrojos/xlsx-stream-reader#3a33c30dee3e4ef27211e4edb1290797edf5f683",
+      "from": "github:lambrojos/xlsx-stream-reader#show-formats",
       "requires": {
         "sax": "^1.2.4",
         "ssf": "^0.10.2",

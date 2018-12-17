@@ -7,6 +7,26 @@ const debug = require('debug')('salmon')
 
 const isEmpty = val => val === undefined || val === null || val === ''
 const byIndex = (_val, i) => i
+
+const transformRow = (row, cols) => {
+  const rowObj = {}
+  for (let i = 0; i < cols.length; i++) {
+    rowObj[cols[i]] = row.values[i]
+  }
+  return rowObj
+}
+
+const withFormats = (row, cols) => {
+  row.formats.shift()
+  const formats = {}
+  for (let i = 0; i < cols.length; i++) {
+    formats[cols[i]] = row.formats[i]
+  }
+  return {
+    values: transformRow(row, cols),
+    formats
+  }
+}
 /**
  * Processes a stream containing an XLSX file.
  * Calls the provided async `processor` function.
@@ -20,6 +40,7 @@ module.exports = ({
   mapColumns = byIndex,
   onLineCount = () => {},
   limit = Infinity,
+  returnFormats = false,
   formatting = true,
   chunkSize = 1,
   hasHeaders = true
@@ -38,6 +59,8 @@ module.exports = ({
     if (stream) { stream.destroy(err) }
   }
 
+  const rowTransformer = returnFormats ? withFormats : transformRow
+
   return {
     stream () {
       detector = new FileType()
@@ -45,12 +68,8 @@ module.exports = ({
       stream = new Transform({
         objectMode: true,
         transform (chunk, enc, cb) {
-          if (chunk.every(isEmpty)) { return cb() }
-          const rowObj = {}
-          for (let i = 0; i < cols.length; i++) {
-            rowObj[cols[i]] = chunk[i]
-          }
-          this.push(rowObj)
+          if (chunk.values.every(isEmpty)) { return cb() }
+          this.push(rowTransformer(chunk, cols))
           cb()
         }
       })
@@ -97,11 +116,11 @@ module.exports = ({
               }
               cols = row.values.map(mapColumns)
               if (!hasHeaders) {
-                stream.write(row.values)
+                stream.write(row)
               } else if (row.values.every(isEmpty)) {
                 throw new Error('Empty header row')
               }
-            } else if (!stream.write(row.values)) {
+            } else if (!stream.write(row)) {
               debug('pausing stream')
               workSheetReader.workSheetStream.pause()
             }
@@ -110,7 +129,7 @@ module.exports = ({
           }
         })
       }
-      const workBookReader = new XlsxStreamReader({ formatting })
+      const workBookReader = new XlsxStreamReader({ formatting, returnFormats })
       workBookReader.on('error', onErr)
       workBookReader.on('worksheet', readSheet)
 
