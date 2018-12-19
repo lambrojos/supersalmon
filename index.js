@@ -72,7 +72,11 @@ module.exports = ({
         objectMode: true,
         transform (chunk, enc, cb) {
           if (chunk.values.every(isEmpty)) { return cb() }
-          this.push(rowTransformer(chunk, cols))
+          try {
+            this.push(rowTransformer(chunk, cols))
+          } catch (e) {
+            return onErr(e)
+          }
           cb()
         }
       })
@@ -139,7 +143,12 @@ module.exports = ({
       detector.on('file-type', checkAndPipe)
       pump(inputStream, detector, onErr)
 
-      return chunkSize > 1 ? pump(stream, objectChunker(chunkSize)) : stream
+      if( chunkSize > 1 )  {
+        const chunker = objectChunker(chunkSize)
+        return pump(stream, chunker, (e) => chunker.emit('error', e))
+      } else {
+        return stream
+      }
     },
     processor ({ onRow, limit }) {
       let i = 0

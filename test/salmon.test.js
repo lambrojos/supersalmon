@@ -195,6 +195,7 @@ describe('XSLT Processor', () => {
       }).processor({
         onRow: (object) => {}
       })
+      throw new Error('Expected to throw')
     } catch (e) {
       expect(e.message).to.equal('Header row is empty')
     }
@@ -204,6 +205,22 @@ describe('XSLT Processor', () => {
     try {
       await XLSXProcessor({
         hasHeaders: true,
+        inputStream: createReadStream(join(__dirname, 'fixtures', 'missingcols.xlsx')),
+        mapColumns: colName => colName.toLowerCase().trim()
+      }).processor({
+        onRow: (object) => {}
+      })
+      throw new Error('Expected to throw')
+    } catch (e) {
+      expect(e.message).to.equal('Missing column name at index 1')
+    }
+  })
+
+  it('reports an error if the first line is partially empty and headers are required, while being chunky', async () => {
+    try {
+      await XLSXProcessor({
+        hasHeaders: true,
+        chunkSize: 2,
         inputStream: createReadStream(join(__dirname, 'fixtures', 'missingcols.xlsx')),
         mapColumns: colName => colName.toLowerCase().trim()
       }).processor({
