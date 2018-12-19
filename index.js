@@ -10,7 +10,10 @@ const byIndex = (_val, i) => i
 
 const transformRow = (row, cols) => {
   const rowObj = {}
-  for (let i = 0; i < cols.length; i++) {
+  for (let i = 0; i < row.values.length; i++) {
+    if (cols[i] === undefined) {
+      throw new Error(`Missing column name at index ${i}`)
+    }
     rowObj[cols[i]] = row.values[i]
   }
   return rowObj
