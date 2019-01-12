@@ -143,7 +143,7 @@ module.exports = ({
       detector.on('file-type', checkAndPipe)
       pump(inputStream, detector, onErr)
 
-      if( chunkSize > 1 )  {
+      if (chunkSize > 1) {
         const chunker = objectChunker(chunkSize)
         return pump(stream, chunker, (e) => chunker.emit('error', e))
       } else {

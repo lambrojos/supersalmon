@@ -1620,7 +1620,7 @@
     },
     "temp": {
       "version": "0.8.3",
-      "resolved": "http://registry.npmjs.org/temp/-/temp-0.8.3.tgz",
+      "resolved": "https://registry.npmjs.org/temp/-/temp-0.8.3.tgz",
       "integrity": "sha1-4Ma8TSa5AxJEEOT+2BEDAU38H1k=",
       "requires": {
         "os-tmpdir": "^1.0.0",
@@ -1682,7 +1682,7 @@
       "dependencies": {
         "bluebird": {
           "version": "3.4.7",
-          "resolved": "http://registry.npmjs.org/bluebird/-/bluebird-3.4.7.tgz",
+          "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-3.4.7.tgz",
           "integrity": "sha1-9y12C+Cbf3bQjtj66Ysomo0F+rM="
         },
         "process-nextick-args": {
@@ -1692,7 +1692,7 @@
         },
         "readable-stream": {
           "version": "2.1.5",
-          "resolved": "http://registry.npmjs.org/readable-stream/-/readable-stream-2.1.5.tgz",
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.1.5.tgz",
           "integrity": "sha1-ZvqLcg4UOLNkaB8q0aY8YYRIydA=",
           "requires": {
             "buffer-shims": "^1.0.0",
@@ -1706,7 +1706,7 @@
         },
         "string_decoder": {
           "version": "0.10.31",
-          "resolved": "http://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz",
+          "resolved": "https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz",
           "integrity": "sha1-YuIDvEF2bGwoyfyEMB2rHFMQ+pQ="
         }
       }
@@ -1761,8 +1761,8 @@
       }
     },
     "xlsx-stream-reader": {
-      "version": "github:lambrojos/xlsx-stream-reader#3a33c30dee3e4ef27211e4edb1290797edf5f683",
-      "from": "github:lambrojos/xlsx-stream-reader#show-formats",
+      "version": "github:lambrojos/xlsx-stream-reader#2c44aa32264c57c04a112cbc089e6a33ba875acf",
+      "from": "github:lambrojos/xlsx-stream-reader#master",
       "requires": {
         "sax": "^1.2.4",
         "ssf": "^0.10.2",

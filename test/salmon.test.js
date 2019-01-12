@@ -216,6 +216,18 @@ describe('XSLT Processor', () => {
     }
   })
 
+  it('parses dates on this file', async () => {
+    await XLSXProcessor({
+      hasHeaders: true,
+      inputStream: createReadStream(join(__dirname, 'fixtures', 'noformatcodes.xlsx')),
+      mapColumns: colName => colName.toLowerCase().trim()
+    }).processor({
+      onRow: (data) => {
+        expect(data['data di nascita']).to.match(/\d\/\d{1,2}\/\d{2}/)
+      }
+    })
+  })
+
   it('reports an error if the first line is partially empty and headers are required, while being chunky', async () => {
     try {
       await XLSXProcessor({
