@@ -1761,8 +1761,8 @@
       }
     },
     "xlsx-stream-reader": {
-      "version": "github:lambrojos/xlsx-stream-reader#2c44aa32264c57c04a112cbc089e6a33ba875acf",
-      "from": "github:lambrojos/xlsx-stream-reader#master",
+      "version": "github:lambrojos/xlsx-stream-reader#5b111840255d849ea5bf4ae91b40c332c9ba5546",
+      "from": "github:lambrojos/xlsx-stream-reader#0.10.1",
       "requires": {
         "sax": "^1.2.4",
         "ssf": "^0.10.2",
