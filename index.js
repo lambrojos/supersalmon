@@ -1,5 +1,5 @@
 const pump = require('pump')
-const XlsxStreamReader = require('xlsx-stream-reader')
+const XlsxStreamReader = require('./lib/xlsx-stream-reader')
 const { Writable, Transform } = require('stream')
 const FileType = require('stream-file-type')
 const objectChunker = require('object-chunker')
