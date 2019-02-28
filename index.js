@@ -39,10 +39,8 @@ const withFormats = (row, cols) => {
  */
 module.exports = ({
   inputStream,
-  processor,
   mapColumns = byIndex,
   onLineCount = () => {},
-  limit = Infinity,
   returnFormats = false,
   formatting = true,
   chunkSize = 1,
@@ -81,7 +79,7 @@ module.exports = ({
         }
       })
 
-      const checkAndPipe = (fileType) => {
+      const checkAndPipe = fileType => {
         if (!fileType || fileType.mime !== 'application/zip') {
           onErr(new Error('Invalid file type'))
         } else {
@@ -145,10 +143,9 @@ module.exports = ({
 
       if (chunkSize > 1) {
         const chunker = objectChunker(chunkSize)
-        return pump(stream, chunker, (e) => chunker.emit('error', e))
-      } else {
-        return stream
+        return pump(stream, chunker, e => chunker.emit('error', e))
       }
+      return stream
     },
     processor ({ onRow, limit }) {
       let i = 0

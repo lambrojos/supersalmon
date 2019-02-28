@@ -24,7 +24,7 @@ describe('XSLT Processor', () => {
       hasHeaders: false,
       inputStream: createReadStream(join(__dirname, 'fixtures', 'prova.xlsx'))
     }).processor({
-      onRow: async (data, i) => {
+      onRow: async data => {
         expect(Object.keys(data)).to.deep.equal(Array.from(Array(10).keys()).map(k => k.toString()))
       }
     })
@@ -37,7 +37,7 @@ describe('XSLT Processor', () => {
       mapColumns: (_v, i) => i * 2,
       inputStream: createReadStream(join(__dirname, 'fixtures', 'prova.xlsx'))
     }).processor({
-      onRow: async (data, i) => {
+      onRow: async data => {
         expect(Object.keys(data)).to.deep.equal(Array.from(Array(10).keys()).map(k => (k * 2).toString()))
       }
     })
@@ -64,7 +64,7 @@ describe('XSLT Processor', () => {
       inputStream,
       mapColumns: i => i
     }).processor({
-      onRow: async (data, i) => {
+      onRow: async data => {
         expect(data['Data di nascita']).to.match(/\d{2}\/\d{2}\/\d{4}/)
         expect(data['cap']).to.match(/\d{5}/)
       }
@@ -78,7 +78,7 @@ describe('XSLT Processor', () => {
       mapColumns: i => i,
       returnFormats: true
     }).processor({
-      onRow: async (data, i) => {
+      onRow: async data => {
         expect(data.values['Data di nascita']).to.match(/\d{2}\/\d{2}\/\d{4}/)
         expect(data.formats['Data di nascita']).to.equal('DD/MM/YYYY')
         expect(data.values['cap']).to.match(/\d{5}/)
@@ -92,7 +92,7 @@ describe('XSLT Processor', () => {
       inputStream,
       mapColumns: i => i
     }).processor({
-      onRow: async (data, i) => {
+      onRow: async data => {
         expect(data['Data di nascita']).to.match(/\d\/\d{1,2}\/\d{2}/)
         expect(data['cap']).to.match(/\d{5}/)
       }
@@ -106,7 +106,7 @@ describe('XSLT Processor', () => {
       mapColumns: i => i,
       returnFormats: true
     }).processor({
-      onRow: async (data, i) => {
+      onRow: async data => {
         expect(data.values['Data di nascita']).to.match(/\d\/\d{1,2}\/\d{2}/)
         expect(data.formats['Data di nascita']).to.equal('m/d/yy')
         expect(data.formats['cap']).to.equal('General')
@@ -121,7 +121,7 @@ describe('XSLT Processor', () => {
       mapColumns: i => i,
       formatting: false
     }).processor({
-      onRow: async (data, i) => {
+      onRow: async data => {
         expect(data['Data di nascita']).to.match(/^\d{5}$/)
       }
     })
@@ -133,7 +133,7 @@ describe('XSLT Processor', () => {
       inputStream,
       mapColumns: colName => colName.toLowerCase().trim()
     }).processor({
-      onRow: async (data, i) => {
+      onRow: async data => {
       },
       limit: 10
     })
@@ -182,7 +182,7 @@ describe('XSLT Processor', () => {
       inputStream: createReadStream(join(__dirname, 'fixtures', 'missingHeaders.xlsx')),
       mapColumns: colName => colName.toLowerCase().trim()
     }).processor({
-      onRow: (object) => {}
+      onRow: object => {}
     })
   })
 
@@ -193,7 +193,6 @@ describe('XSLT Processor', () => {
         inputStream: createReadStream(join(__dirname, 'fixtures', 'missingHeaders.xlsx')),
         mapColumns: colName => colName.toLowerCase().trim()
       }).processor({
-        onRow: (object) => {}
       })
       throw new Error('Expected to throw')
     } catch (e) {
@@ -207,9 +206,7 @@ describe('XSLT Processor', () => {
         hasHeaders: true,
         inputStream: createReadStream(join(__dirname, 'fixtures', 'missingcols.xlsx')),
         mapColumns: colName => colName.toLowerCase().trim()
-      }).processor({
-        onRow: (object) => {}
-      })
+      }).processor({})
       throw new Error('Expected to throw')
     } catch (e) {
       expect(e.message).to.equal('Missing column name at index 1')
@@ -222,7 +219,7 @@ describe('XSLT Processor', () => {
       inputStream: createReadStream(join(__dirname, 'fixtures', 'noformatcodes.xlsx')),
       mapColumns: colName => colName.toLowerCase().trim()
     }).processor({
-      onRow: (data) => {
+      onRow: data => {
         expect(data['data di nascita']).to.match(/\d\/\d{1,2}\/\d{2}/)
       }
     })
@@ -236,7 +233,6 @@ describe('XSLT Processor', () => {
         inputStream: createReadStream(join(__dirname, 'fixtures', 'missingcols.xlsx')),
         mapColumns: colName => colName.toLowerCase().trim()
       }).processor({
-        onRow: (object) => {}
       })
       throw new Error('Expected to throw')
     } catch (e) {

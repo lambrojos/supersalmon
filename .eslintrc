@@ -1,3 +1,58 @@
 {
-  "extends": "standard"
+  "env": {
+      "es6": true,
+      "node": true,
+      "mocha": true
+  },
+  "extends": ["eslint:recommended"],
+  "rules": {
+    "indent": [
+        "error",
+        2
+    ],
+    "no-multi-spaces": "error",
+    "no-throw-literal": "error",
+    "comma-dangle": [
+      "error",
+      "never"
+    ],
+    "no-else-return": "error",
+    "prefer-const": "error",
+    "array-bracket-spacing": [
+        "error",
+        "never"
+    ],
+    "object-curly-spacing": [
+        "error",
+        "always"
+    ],
+    "linebreak-style": [
+        "error",
+        "unix"
+    ],
+    "quotes": [
+        "error",
+        "single"
+    ],
+    "semi": [
+        "error",
+        "never"
+    ],
+    "arrow-parens": ["error", "as-needed"],
+    "no-console": "warn",
+    "no-unused-vars": [
+        2,
+        {
+            "vars": "all",
+            "args": "after-used",
+            "argsIgnorePattern": "^_|^next$"
+        }
+    ]
+  },
+  "parserOptions": {
+      "ecmaVersion": 8,
+      "ecmaFeatures": {
+          "experimentalObjectRestSpread": true
+      }
+  }
 }
