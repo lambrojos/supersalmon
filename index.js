@@ -1,5 +1,5 @@
 const pump = require('pump')
-const XlsxStreamReader = require('./lib/xlsx-stream-reader')
+const WorkBook = require('./lib/workbook.js')
 const { Writable, Transform } = require('stream')
 const FileType = require('stream-file-type')
 const objectChunker = require('object-chunker')
@@ -134,7 +134,7 @@ module.exports = ({
           }
         })
       }
-      const workBookReader = new XlsxStreamReader({ formatting, returnFormats })
+      const workBookReader = new WorkBook({ formatting, returnFormats })
       workBookReader.on('error', onErr)
       workBookReader.on('worksheet', readSheet)
 

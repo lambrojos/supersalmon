@@ -8,7 +8,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha test lib/xlsx-stream-reader/test --timeout 100000"
+    "test": "mocha test lib/workbook.test --timeout 100000"
   },
   "author": "",
   "license": "ISC",
