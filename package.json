@@ -8,7 +8,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha test --timeout 100000"
+    "test": "mocha test lib/workbook.test --timeout 100000"
   },
   "author": "",
   "license": "ISC",
@@ -27,7 +27,10 @@
     "eslint": "^5.2.0",
     "object-chunker": "^1.0.1",
     "pump": "^3.0.0",
+    "sax": "^1.2.4",
+    "ssf": "^0.10.2",
     "stream-file-type": "^0.1.1",
-    "xlsx-stream-reader": "github:lambrojos/xlsx-stream-reader#0.10.1"
+    "temp": "^0.9.0",
+    "unzipper": "^0.9.11"
   }
 }

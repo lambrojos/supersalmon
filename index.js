@@ -1,5 +1,5 @@
 const pump = require('pump')
-const XlsxStreamReader = require('xlsx-stream-reader')
+const WorkBook = require('./lib/workbook.js')
 const { Writable, Transform } = require('stream')
 const FileType = require('stream-file-type')
 const objectChunker = require('object-chunker')
@@ -39,10 +39,8 @@ const withFormats = (row, cols) => {
  */
 module.exports = ({
   inputStream,
-  processor,
   mapColumns = byIndex,
   onLineCount = () => {},
-  limit = Infinity,
   returnFormats = false,
   formatting = true,
   chunkSize = 1,
@@ -81,7 +79,7 @@ module.exports = ({
         }
       })
 
-      const checkAndPipe = (fileType) => {
+      const checkAndPipe = fileType => {
         if (!fileType || fileType.mime !== 'application/zip') {
           onErr(new Error('Invalid file type'))
         } else {
@@ -136,7 +134,7 @@ module.exports = ({
           }
         })
       }
-      const workBookReader = new XlsxStreamReader({ formatting, returnFormats })
+      const workBookReader = new WorkBook({ formatting, returnFormats })
       workBookReader.on('error', onErr)
       workBookReader.on('worksheet', readSheet)
 
@@ -145,10 +143,9 @@ module.exports = ({
 
       if (chunkSize > 1) {
         const chunker = objectChunker(chunkSize)
-        return pump(stream, chunker, (e) => chunker.emit('error', e))
-      } else {
-        return stream
+        return pump(stream, chunker, e => chunker.emit('error', e))
       }
+      return stream
     },
     processor ({ onRow, limit }) {
       let i = 0
