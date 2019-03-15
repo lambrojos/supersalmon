@@ -22,6 +22,10 @@
     "eslint-plugin-standard": "^3.1.0",
     "mocha": "^5.2.0"
   },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/lambrojos/supersalmon"
+  },
   "dependencies": {
     "debug": "^3.1.0",
     "eslint": "^5.2.0",
