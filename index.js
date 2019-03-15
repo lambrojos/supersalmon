@@ -63,7 +63,8 @@ module.exports = ({
   const rowTransformer = returnFormats ? withFormats : transformRow
 
   return {
-    stream () {
+    stream (limit = Infinity) {
+      let i = 0
       detector = new FileType()
 
       stream = new Transform({
@@ -92,6 +93,7 @@ module.exports = ({
         }
       }
 
+
       const readSheet = workSheetReader => {
         detected = true
         reader = workSheetReader
@@ -107,7 +109,15 @@ module.exports = ({
           debug('resume stream')
           workSheetReader.workSheetStream.resume()
         })
-        workSheetReader.on('row', (row, i) => {
+        workSheetReader.on('row', row => {
+          if(i++ > limit){
+            workBookReader.abort()
+            detector.destroy()
+            inputStream.destroy()
+            workSheetReader.workSheetStream.destroy()
+            stream.push(null)
+            return
+          }
           row.values.shift()
           debug('row received')
           try {
@@ -149,7 +159,7 @@ module.exports = ({
     },
     processor ({ onRow, limit }) {
       let i = 0
-      const readStream = this.stream()
+      const readStream = this.stream(limit)
       return new Promise((resolve, reject) => {
         const processRow = new Writable({
           objectMode: true,
@@ -158,15 +168,6 @@ module.exports = ({
             try {
               await onRow(row, i)
               i += chunkSize
-              if (i === limit) {
-                readStream.destroy()
-                detector.destroy()
-                inputStream.destroy()
-                this.destroy()
-                // a premature close error will be raised.. this could actually be good as pump
-                // will unpipe and cleanup
-                return resolve(i)
-              }
             } catch (err) {
               return cb(err)
             }

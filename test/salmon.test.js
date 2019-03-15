@@ -5,7 +5,7 @@ const { join } = require('path')
 const { createReadStream } = require('fs')
 const { Writable } = require('stream')
 
-describe('XSLT Processor', () => {
+describe.only('XSLT Processor', () => {
   it('processes an xslt file.', async () => {
     const processed = await XLSXProcessor({
       inputStream: createReadStream(join(__dirname, 'fixtures', 'error.xlsx')),
@@ -133,8 +133,7 @@ describe('XSLT Processor', () => {
       inputStream,
       mapColumns: colName => colName.toLowerCase().trim()
     }).processor({
-      onRow: async data => {
-      },
+      onRow: () => {},
       limit: 10
     })
     expect(processed).to.equal(10)
@@ -176,13 +175,32 @@ describe('XSLT Processor', () => {
     }))
   })
 
+  it('allows the user to process the first n records', cb => {
+    let nRows = 0
+    const stream = XLSXProcessor({
+      inputStream: createReadStream(join(__dirname, 'fixtures', 'error.xlsx')),
+      mapColumns: colName => colName.toLowerCase().trim()
+    }).stream(2)
+    stream.pipe(new Writable({
+      objectMode: true,
+      write (chunk, _enc, cb) {
+        nRows++
+        cb()
+      }
+    }))
+    stream.on('end', () => {
+      expect(nRows).to.equal(2)
+      cb()
+    })
+  })
+
   it('does not report an error if the first line is empty and headers are not required', async () => {
     await XLSXProcessor({
       hasHeaders: false,
       inputStream: createReadStream(join(__dirname, 'fixtures', 'missingHeaders.xlsx')),
       mapColumns: colName => colName.toLowerCase().trim()
     }).processor({
-      onRow: object => {}
+      onRow: () => {}
     })
   })
 

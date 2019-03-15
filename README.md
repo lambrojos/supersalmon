@@ -3,7 +3,7 @@
 ## Features
 * Process xlsx files while streaming
 * Records are processed one at a time by a user supplied promise returning function
-* Strives for memory efficency - Automatic backpressure handling
+* Strives for memory efficiency - Automatic backpressure handling
 * Line count support (not all xlsx files contain this metadata)
 * Can transform column names
 * Will reject on non xlsx data
@@ -59,6 +59,11 @@
   // Alternatively it is possibile to access directly the object stream
 
   const stream = supersalmon({ /* config */ }).stream()
+
+  // it is possibile to take only the first n records
+  const stream10 = supersalmon({ /* config */ }).stream(10)
+
+
   stream.pipe(myOtherStream)
 ```
 
