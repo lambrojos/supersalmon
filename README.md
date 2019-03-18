@@ -81,3 +81,7 @@ Or see tests
 - [ ] Parse all sheets in a workbook
 
 Issues and PRs more than welcome!
+
+
+## Credits
+A large part of the code base has been adapted from [xlsx-stream-reader](https://www.npmjs.com/package/xlsx-stream-reader)

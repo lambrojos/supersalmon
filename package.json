@@ -8,7 +8,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha test lib/workbook.test --timeout 100000"
+    "test": "mocha test --timeout 100000 && mocha lib/workbook.test --timeout 100000"
   },
   "author": "",
   "license": "ISC",

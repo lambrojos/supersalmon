@@ -164,6 +164,7 @@ module.exports = ({
         const processRow = new Writable({
           objectMode: true,
           async write (row, encoding, cb) {
+
             // if this fails, pump will cleanup the broken streams.
             try {
               await onRow(row, i)
