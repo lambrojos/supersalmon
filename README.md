@@ -50,7 +50,7 @@
     // (optional) parse until the 10th line then destroy streams and return
     limit: 10,
     // the row index tis provided as the second parameter
-    processor: ({name, surname}, i) => {
+    onRow: ({name, surname}, i) => {
       doSomethingWithRowIndex(i)
       repository.insert({ name, surname })
     },
