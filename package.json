@@ -1,6 +1,6 @@
 {
   "name": "supersalmon",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Stream processor for xlsx files",
   "main": "index.js",
   "directories": {
