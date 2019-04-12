@@ -40,9 +40,11 @@
     // (optional) the last function is called when the line count metadata is encountered in the stream
     onLineCount: lineCount => notifyLineCount(lineCount),
 
-
     // enable or disable the underlying xlsx-stream-reader formatting feature
     formatting: false,
+
+    // if true, does not throw an error when a cell does not have corresponding column name and skips the cell instead
+    lenientColumnMapping: false
 
     // Returns rows in arrays of 3 elements
     chunkSize: 3

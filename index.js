@@ -8,28 +8,7 @@ const debug = require('debug')('salmon')
 const isEmpty = val => val === undefined || val === null || val === ''
 const byIndex = (_val, i) => i
 
-const transformRow = (row, cols) => {
-  const rowObj = {}
-  for (let i = 0; i < row.values.length; i++) {
-    if (cols[i] === undefined) {
-      throw new Error(`Missing column name at index ${i}`)
-    }
-    rowObj[cols[i]] = row.values[i]
-  }
-  return rowObj
-}
 
-const withFormats = (row, cols) => {
-  row.formats.shift()
-  const formats = {}
-  for (let i = 0; i < cols.length; i++) {
-    formats[cols[i]] = row.formats[i]
-  }
-  return {
-    values: transformRow(row, cols),
-    formats
-  }
-}
 /**
  * Processes a stream containing an XLSX file.
  * Calls the provided async `processor` function.
@@ -44,13 +23,40 @@ module.exports = ({
   returnFormats = false,
   formatting = true,
   chunkSize = 1,
-  hasHeaders = true
+  hasHeaders = true,
+  lenientColumnMapping= false
 }) => {
   let cols = null
   let detected = false
   let stream
   let detector
   let reader
+
+  const withFormats = (row, cols) => {
+    row.formats.shift()
+    const formats = {}
+    for (let i = 0; i < cols.length; i++) {
+      formats[cols[i]] = row.formats[i]
+    }
+    return {
+      values: transformRow(row, cols),
+      formats
+    }
+  }
+  const transformRow = (row, cols) => {
+    const rowObj = {}
+    for (let i = 0; i < row.values.length; i++) {
+      if (cols[i] === undefined) {
+        if(lenientColumnMapping){
+          return rowObj
+        }
+        throw new Error(`Missing column name at index ${i}`)
+      }
+      rowObj[cols[i]] = row.values[i]
+    }
+    return rowObj
+  }
+
   const onErr = err => {
     if (!err) return
     debug(err)
