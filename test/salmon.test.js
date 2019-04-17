@@ -211,6 +211,7 @@ describe.only('XSLT Processor', () => {
         inputStream: createReadStream(join(__dirname, 'fixtures', 'missingHeaders.xlsx')),
         mapColumns: colName => colName.toLowerCase().trim()
       }).processor({
+        onRow: () => {}
       })
       throw new Error('Expected to throw')
     } catch (e) {
@@ -269,5 +270,29 @@ describe.only('XSLT Processor', () => {
     } catch (e) {
       expect(e.message).to.equal('Invalid file type')
     }
+  })
+
+  it('does not eat records in case of very slow readable streams', cb => {
+    let lastChunk = null
+    const stream = XLSXProcessor({
+      lenientColumnMapping: true,
+      inputStream: createReadStream(join(__dirname, 'fixtures', 'slow.xlsx')),
+      mapColumns: colName => colName.toLowerCase().trim()
+    }).stream()
+    const slow = new Writable({
+      objectMode: true,
+      write (chunk, _enc, cb) {
+        console.log(chunk)
+        lastChunk = chunk
+        setTimeout(() => {
+          cb()
+        }, 500)
+      }
+    })
+    stream.pipe(slow)
+    slow.on('finish', () => {
+      expect(lastChunk['first name']).to.equal('Minoru')
+      cb()
+    })
   })
 })

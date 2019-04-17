@@ -4,9 +4,12 @@ const { Writable, Transform } = require('stream')
 const FileType = require('stream-file-type')
 const objectChunker = require('object-chunker')
 const debug = require('debug')('salmon')
+const Promise = require('bluebird')
 
 const isEmpty = val => val === undefined || val === null || val === ''
 const byIndex = (_val, i) => i
+
+const END = Symbol('END')
 
 
 /**
@@ -28,6 +31,7 @@ module.exports = ({
 }) => {
   let cols = null
   let detected = false
+  const worksheetCompleted = false
   let stream
   let detector
   let reader
@@ -76,12 +80,16 @@ module.exports = ({
       stream = new Transform({
         objectMode: true,
         transform (chunk, enc, cb) {
-          if (chunk.values.every(isEmpty)) { return cb() }
+          if(chunk === END){
+            this.push(null)
+            return cb()
+          }
           try {
             this.push(rowTransformer(chunk, cols))
           } catch (e) {
             return onErr(e)
           }
+
           cb()
         }
       })
@@ -99,7 +107,6 @@ module.exports = ({
         }
       }
 
-
       const readSheet = workSheetReader => {
         detected = true
         reader = workSheetReader
@@ -108,7 +115,9 @@ module.exports = ({
         if (workSheetReader.id > 1) { workSheetReader.skip(); return }
         // worksheet reader is an event emitter - we have to convert it to a read stream
         // signal stream end when the event emitter is finished
-        workSheetReader.on('end', () => stream.push(null))
+        workSheetReader.on('end', async () => {
+          stream.write(END)
+        })
         workSheetReader.process()
 
         stream.on('drain', () => {
@@ -116,20 +125,20 @@ module.exports = ({
           workSheetReader.workSheetStream.resume()
         })
         workSheetReader.on('row', row => {
-          if(i++ > limit){
-            workBookReader.abort()
-            detector.destroy()
-            inputStream.destroy()
-            workSheetReader.workSheetStream.destroy()
-            stream.push(null)
-            return
-          }
-          row.values.shift()
-          debug('row received')
           try {
             if (row.values.every(isEmpty)) {
               if (!cols && hasHeaders) { throw new Error('Header row is empty') } else { return }
             }
+            if(i++ > limit){
+              workBookReader.abort()
+              detector.destroy()
+              inputStream.destroy()
+              workSheetReader.workSheetStream.destroy()
+              stream.push(null)
+              return
+            }
+            row.values.shift()
+            debug('row received')
             if (!cols) {
               if (workSheetReader.sheetData.dimension) {
                 const lines = workSheetReader.sheetData.dimension[0].attributes.ref.match(/\d+$/)
@@ -141,9 +150,12 @@ module.exports = ({
               } else if (row.values.every(isEmpty)) {
                 throw new Error('Empty header row')
               }
-            } else if (!stream.write(row)) {
-              debug('pausing stream')
-              workSheetReader.workSheetStream.pause()
+            } else {
+              const o = stream.write(row)
+              if(!o) {
+                debug('pausing stream')
+                workSheetReader.workSheetStream.pause()
+              }
             }
           } catch (err) {
             onErr(err)
