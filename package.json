@@ -10,6 +10,7 @@
   "scripts": {
     "test": "mocha test --timeout 100000 && mocha lib/workbook.test --timeout 100000"
   },
+  "keywords": ["xlsx", "parser", "streaming", "excel", "reader"],
   "author": "",
   "license": "ISC",
   "devDependencies": {
