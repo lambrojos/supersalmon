@@ -31,7 +31,6 @@ module.exports = ({
 }) => {
   let cols = null
   let detected = false
-  const worksheetCompleted = false
   let stream
   let detector
   let reader
@@ -80,10 +79,6 @@ module.exports = ({
       stream = new Transform({
         objectMode: true,
         transform (chunk, enc, cb) {
-          if(chunk === END){
-            this.push(null)
-            return cb()
-          }
           try {
             this.push(rowTransformer(chunk, cols))
           } catch (e) {
@@ -116,7 +111,7 @@ module.exports = ({
         // worksheet reader is an event emitter - we have to convert it to a read stream
         // signal stream end when the event emitter is finished
         workSheetReader.on('end', async () => {
-          stream.write(END)
+          stream.end()
         })
         workSheetReader.process()
 

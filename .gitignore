@@ -59,4 +59,5 @@ typings/
 
 .~lock*.xlsx
 
+*--private--*
 
