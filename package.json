@@ -1,6 +1,6 @@
 {
   "name": "supersalmon",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Stream processor for xlsx files",
   "main": "index.js",
   "directories": {
@@ -10,7 +10,13 @@
   "scripts": {
     "test": "mocha test --timeout 100000 && mocha lib/workbook.test --timeout 100000"
   },
-  "keywords": ["xlsx", "parser", "streaming", "excel", "reader"],
+  "keywords": [
+    "xlsx",
+    "parser",
+    "streaming",
+    "excel",
+    "reader"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
