@@ -11,7 +11,6 @@ const byIndex = (_val, i) => i
 
 const END = Symbol('END')
 
-
 /**
  * Processes a stream containing an XLSX file.
  * Calls the provided async `processor` function.
@@ -27,7 +26,7 @@ module.exports = ({
   formatting = true,
   chunkSize = 1,
   hasHeaders = true,
-  lenientColumnMapping= false
+  lenientColumnMapping = false
 }) => {
   let cols = null
   let detected = false
@@ -50,7 +49,7 @@ module.exports = ({
     const rowObj = {}
     for (let i = 0; i < row.values.length; i++) {
       if (cols[i] === undefined) {
-        if(lenientColumnMapping){
+        if (lenientColumnMapping) {
           return rowObj
         }
         throw new Error(`Missing column name at index ${i}`)
@@ -124,7 +123,7 @@ module.exports = ({
             if (row.values.every(isEmpty)) {
               if (!cols && hasHeaders) { throw new Error('Header row is empty') } else { return }
             }
-            if(i++ > limit){
+            if (i++ > limit) {
               workBookReader.abort()
               detector.destroy()
               inputStream.destroy()
@@ -147,7 +146,7 @@ module.exports = ({
               }
             } else {
               const o = stream.write(row)
-              if(!o) {
+              if (!o) {
                 debug('pausing stream')
                 workSheetReader.workSheetStream.pause()
               }
@@ -177,7 +176,6 @@ module.exports = ({
         const processRow = new Writable({
           objectMode: true,
           async write (row, encoding, cb) {
-
             // if this fails, pump will cleanup the broken streams.
             try {
               await onRow(row, i)
