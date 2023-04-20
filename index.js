@@ -4,7 +4,6 @@ const { Writable, Transform } = require('stream')
 const FileType = require('stream-file-type')
 const objectChunker = require('object-chunker')
 const debug = require('debug')('salmon')
-const Promise = require('bluebird')
 
 const isEmpty = val => val === undefined || val === null || val === ''
 const byIndex = (_val, i) => i
